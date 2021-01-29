@@ -1,0 +1,196 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+struct student
+{
+	char name[20];
+	int age;
+	char sex[5];
+	char num[20];
+};
+
+struct Node
+{
+	struct student data;
+	struct Node* next;
+};
+
+struct Node* createList()
+{
+	struct Node* headNode=(struct Node*)malloc(sizeof(struct Node));
+	headNode->next=NULL;
+	return headNode;
+}
+
+struct Node* createNode(struct student data)
+{
+	struct Node* newNode=(struct Node*)malloc(sizeof(struct Node));
+	newNode->data=data;
+	newNode->next=NULL;
+	return newNode;
+}
+
+void insertNodeByHead(struct Node* headNode,struct student data)
+{
+	struct Node* newNode=createNode(data);
+	newNode->next=headNode->next;
+	headNode->next=newNode;
+}
+
+void deleteAppoinNode(struct Node* headNode,char* name)
+{
+	struct Node* posNode=headNode->next;
+	struct Node* posFrontNode=headNode;
+	if(posNode==NULL)
+	{
+		printf("Êý¾ÝÎª¿Õ£¬ÎÞ·¨É¾³ý£¡\n");
+		return;
+	}
+	//×Ö·û´®£ºstrcmp
+	while(strcmp(posNode->data.name,name))
+	{
+		posFrontNode=posNode;
+		posNode=posFrontNode->next;
+        if(posNode==NULL)
+		{
+            printf("Î´ÕÒµ½Ö¸¶¨Î»ÖÃ£¬ÎÞ·¨É¾³ý£¡\n");
+			return;
+		}
+	}
+	posFrontNode->next=posNode->next;
+	free(posNode);
+}
+//²éÕÒ
+struct Node* searchInfoByData(struct Node* headNode,char *name)
+{
+	struct Node* pMove=headNode->next;
+	while(pMove != NULL&&strcmp(pMove->data.name,name))
+	{
+		pMove=pMove->next;
+	}
+	return pMove;
+}
+
+void printList(struct Node* headNode)
+{
+	struct Node* pMove=headNode->next;
+	printf("ÐÕÃû\tÄêÁä\tÐÔ±ð\tÑ§ºÅ\n");
+	while(pMove)
+	{
+		printf("%s\t%d\t%s\t%s\n",pMove->data.name,pMove->data.age,pMove->data.sex,pMove->data.num);
+		pMove=pMove->next;
+	}
+	printf("\n");
+}
+
+int menu()
+{
+	int x;
+	printf("\n         Ñ§ÉúÐÅÏ¢¹ÜÀíÏµÍ³\n");
+	printf("----------------------------------------\n");
+    printf("        1.Ñ§ÉúÐÅÏ¢ÏßÐÔ±íµÄ½¨Á¢\n");
+	printf("        2.ÊäÈëÑ§ÉúÐÅÏ¢\n");
+	printf("        3.²éÕÒÑ§ÉúÐÅÏ¢\n");
+	printf("        4.É¾³ýÑ§ÉúÐÅÏ¢\n");
+	printf("        5.ä¯ÀÀËùÓÐÑ§ÉúÐÅÏ¢\n");
+	printf("        0.ÍË³ö¹ÜÀíÏµÍ³\n");
+	printf("----------------------------------------\n");
+    printf("ÇëÑ¡Ôñ0-5:\n");
+    for(;;)
+	{
+		scanf("%d",&x);
+		if (x<0 || x>5)
+		   printf("\nÊäÈë´íÎó£¬ÖØÑ¡0-5\n");
+		else
+		   break;
+	}
+	return x;
+}
+
+struct Node* list;
+void key(int x)
+{   
+	struct student data;
+	int n,i,j;
+	struct Node* pMove=NULL;
+	switch(x)
+	{
+     case 1:
+        printf("----------Ñ§ÉúÐÅÏ¢ÏßÐÔ±íµÄ½¨Á¢-------------\n");
+		printf("ÇëÊäÈëÓÐ¼¸Î»Ñ§Éú£º");
+		fflush(stdin);
+	    scanf("%d",&n);
+        for(i=0;i<n;i++)
+		{
+			j=i+1;
+            printf("ÇëÊäÈëµÚ%dÎ»Ñ§ÉúÐÕÃû£¬ÄêÁä£¬ÐÔ±ð£¬Ñ§ºÅ:\n",j);
+		    fflush(stdin);
+		    scanf("%s%d%s%s",data.name,&data.age,data.sex,data.num);
+		    insertNodeByHead(list,data);
+		}
+        break;
+     case 2:
+        printf("----------ÊäÈëÑ§ÉúÐÅÏ¢-------------\n");
+        printf("ÇëÊäÈëÓÐ¼¸Î»Ñ§Éú£º");
+		fflush(stdin);
+	    scanf("%d",&n);
+		for(i=0;i<n;i++)
+		{
+			j=i+1;
+            printf("ÇëÊäÈëµÚ%dÎ»Ñ§ÉúÐÕÃû£¬ÄêÁä£¬ÐÔ±ð£¬Ñ§ºÅ:\n",j);
+		    fflush(stdin);
+		    scanf("%s%d%s%s",data.name,&data.age,data.sex,data.num);
+			insertNodeByHead(list,data);
+		}
+        break;
+     case 3:
+        printf("----------²éÕÒÑ§ÉúÐÅÏ¢-------------\n");
+        printf("ÇëÊäÈëÒª²éÕÒµÄÑ§ÉúÐÕÃû£º");
+		fflush(stdin);
+		scanf("%s",data.name);
+		pMove=searchInfoByData(list,data.name);
+        if(pMove==NULL)
+		{
+			printf(" ²éÎÞ´ËÈË£¡\n");
+			system("pause");
+		}
+		else
+		{
+	        printf("ÐÕÃû\tÄêÁä\tÐÔ±ð\tÑ§ºÅ\n");
+            printf("%s\t%d\t%s\t%s\n",pMove->data.name,pMove->data.age,pMove->data.sex,pMove->data.num);
+		}
+        break;
+     case 4:
+        printf("----------É¾³ýÑ§ÉúÐÅÏ¢-------------\n");
+        printf("ÇëÊäÈëÉ¾³ýµÄÑ§ÉúÐÕÃû£º\n");
+        fflush(stdin);
+		scanf("%s",data.name);
+        deleteAppoinNode(list,data.name);
+        break;
+     case 5:
+        printf("----------ä¯ÀÀËùÓÐÑ§ÉúÐÅÏ¢-------------\n");
+        printList(list);
+        break;
+     case 0:
+	printf("ÍË³öÏµÍ³\n");
+	system("pause");
+	exit(0);
+	break;
+	}
+}
+
+int main()
+{
+	int x;
+    list=createList();
+	while(1)
+	{
+	   x=menu();
+       key(x);
+	   system("pause");
+	   system("cls");
+	 }
+    system("pause");
+	return 0;
+}
